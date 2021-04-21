@@ -79,37 +79,94 @@ class Game
             case '♜':
             case '♖':
                 return this.MakeMove(
-                    ((x1 == x2) || (y1 == y2)),
+                    (
+                        (x1 == x2) ||
+                        (y1 == y2)
+                    ),
                     y1, x1, y2, x2)
             case '♗':
             case '♝':
                 return this.MakeMove(
                     (
-                        (x2-x1)/(y2-y1) == 1 ||
-                        (x2-x1)/(y2-y1) == -1
+                        ((x2-x1)/(y2-y1) == 1) ||
+                        ((x2-x1)/(y2-y1) == -1)
                     ),
                     y1, x1, y2, x2)
             case '♕':
             case '♛':
                 return this.MakeMove(
                     (
-                        ((xDif)/(yDif) == 1 || 
-                        (xDif)/(yDif) == -1) || 
-                        (x1 == x2) || (y1 == y2)),
+                        (
+                            ((xDif)/(yDif) == 1) || 
+                            ((xDif)/(yDif) == -1)
+                        ) || 
+                        (x1 == x2) ||
+                        (y1 == y2)
+                    ),
                     y1, x1, y2, x2)
             case '♚':
             case '♔':
                 return this.MakeMove(
-                    (2 > xDif > -2 && 2 > yDif > -2),
+                    (
+                        (2 > xDif > -2) && 
+                        (2 > yDif > -2)
+                    ),
                     y1, x1, y2, x2)
             case '♘':
             case '♞':
                 return this.MakeMove(
                     (
-                        (xDif == 2 && yDif == 1) ||
-                        (xDif == 1 && yDif == 2) ||
-                        (xDif == -2 && yDif == -1) ||
-                        (xDif == -1 && yDif == -2)
+                        (xDif*xDif) + (yDif * yDif) == 5
+                    ),
+                    y1, x1, y2, x2)
+            case '♙':
+                return this.MakeMove(
+                    (
+                        (
+                            // Capture move
+                            (this.Occupied(y2, x2)) &&
+                            (2 > xDif > -2) &&
+                            (yDif == -1)
+                        ) ||
+                        (
+                            // Regular moves
+                            (xDif == 0) &&
+                            (
+                                // Double push move
+                                (y1 == 6) &&
+                                (yDif == -2)
+                            ) ||
+                            (
+                                // Standard move
+                                (y1 != 6) &&
+                                (yDif == -1)
+                            )
+                        )
+                    ),
+                    y1, x1, y2, x2)
+            case '♟':
+                return this.MakeMove(
+                    (
+                        (
+                            // Capture move
+                            (this.Occupied(y2, x2)) &&
+                            (2 > xDif > -2) &&
+                            (yDif == 1)
+                        ) ||
+                        (
+                            // Regular moves
+                            (xDif == 0) &&
+                            (
+                                // Double push move
+                                (y1 == 1) &&
+                                (yDif == 2)
+                            ) ||
+                            (
+                                // Standard move
+                                (y1 != 1) &&
+                                (yDif == 1)
+                            )
+                        )
                     ),
                     y1, x1, y2, x2)
             default:

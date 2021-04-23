@@ -97,29 +97,38 @@ class Game
     // return (bool) - True if destination jumps over piece
     RookJumpCheck(y1=0, x1=0, y2=0, x2=0)
     {
+        var returnFlag = false;
         // If movement is in the positive direction
         if (y1 < y2 || x1 < x2)
         {
             // Check possible moves towards east
-            for (var i = x1; i < x2-1; i++){
-                if (this.Occupied(y1, i)[0])
-                    return true;
-                }
+            for (var i = x1+1; i < x2-1; i++){
+                if (this.Occupied(y1, i)[0]){
+                    console.log(this.Occupied(y1, i)[1] + `1 ${i} ${y1}`)
+                    returnFlag = true;
+                    break;}}
             // Check possible moves towards south
-            for (var i = y1; i < y2-1; i++){
-                if (this.Occupied(i, x1)[0])
-                    return true; }
+            for (var i = y1+1; i < y2-1; i++){
+                if (this.Occupied(i, x1)[0]){
+                    console.log(this.Occupied(i, x1)[1] + `2 ${x1} ${i}`)
+                    returnFlag = true;
+                    break;}}
         } else {
             // Check possible moves towards west
-            for (var i = x2; i < x1-1; i--){
-                if (this.Occupied(y1, i)[0]) 
-                    return true; }
+            for (var i = x2-1; i < x1+1; i--){
+                if (this.Occupied(y1, i)[0]) {
+                    console.log(this.Occupied(y1, i)[1] + `3 ${i} ${y1}`)
+                    returnFlag = true; 
+                    break;}}
             // Check possible moves towards north
-            for (var i = y2; i < y1-1; i--){
-                if (this.Occupied(i, x1)[0])
-                    return true; }
+            for (var i = y2-1; i < y1+1; i--){
+                if (this.Occupied(i, x1)[0]){
+                    console.log(this.Occupied(i, x1)[1] + `4 ${x1} ${i}`)
+                    returnFlag = true; 
+                    break;}}
         }
-        return false;
+        console.log(returnFlag);
+        return returnFlag;
     }
     // Check if a Bishop's destination goes over another piece
     // y1 (int) - Bishop's starting y coordinate

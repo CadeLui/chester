@@ -10,6 +10,9 @@ const dotenv = require('dotenv');
 const client = new Discord.Client();
 dotenv.config();
 
+const BLACK_PIECES = ['♞', '♝', '♛', '♚', '♟', '♜']
+const WHITE_PIECES = ['♘', '♗', '♕', '♔', '♙', '♖']
+
 class Game
 {
     // Takes the board array and turns it into a string to reply to a message with
@@ -48,7 +51,7 @@ class Game
         this.board = [
             ['♜', '♞', '♝', '♛', '♚', '♝', '♞', '♜'],
             ['♟', '♟', '♟', '♟', '♟', '♟', '♟', '♟'],
-            ['♟', '◼️', '◻️', '◼️', '◻️', '◼️', '◻️', '◼️'],
+            ['◻️', '◼️', '◻️', '◼️', '◻️', '◼️', '◻️', '◼️'],
             ['◼️', '◻️', '◼️', '◻️', '◼️', '◻️', '◼️', '◻️'],
             ['◻️', '◼️', '◻️', '◼️', '◻️', '◼️', '◻️', '◼️'],
             ['◼️', '◻️', '◼️', '◻️', '◼️', '◻️', '◼️', '◻️'],
@@ -86,16 +89,94 @@ class Game
             return true;
         } return false;
     }
+    RookJumpCheck(y1=0, x1=0, y2=0, x2=0)
+    {
+        var xDif = x2-x1;
+        var yDif = y2-y1;
+
+        if (y1 < y2 || x1 < x2)
+        {
+            for (var i = x1; i < x2-1; i++){
+                if (this.Occupied(y1, i)[0])
+                    return true;
+                console.log(this.Occupied(y1, i)[0])}
+            for (var i = y1; i < y2-1; i++){
+                if (this.Occupied(i, x1)[0])
+                    return true;
+                console.log(this.Occupied(i, x1)[0])}
+        } else {
+            for (var i = x2; i < x1-1; i--){
+                if (this.Occupied(y1, i)[0]) 
+                    return true;
+                console.log(this.Occupied(y1, i)[0])}
+            for (var i = y2; i < y1-1; i--){
+                if (this.Occupied(i, x1)[0])
+                    return true;
+                console.log(this.Occupied(i, x1)[0])}
+        }
+        return false;
+    }
+    BishopJumpCheck(y1=0, x1=0, y2=0, x2=0)
+    {
+        var slope = (x2-x1)/(y2-y1);
+        var returnFlag = false
+        if (slope == 1)
+        {
+            if (x2>x1)
+            {
+                for (var i=1; x1+i<x2; i++)
+                    if (this.Occupied(y1+i, x1+i)[0])
+                    {
+                        console.log(this.Occupied(y1+i, x1+i)[1] + `1 ${x1+i} ${y1+i}`)
+                        returnFlag = true;
+                    }
+            }
+            else
+            {
+                for (var i=1; x2+i<x1; i++)
+                    if (this.Occupied(y1-i, x1-i)[0])
+                    {
+                        console.log(this.Occupied(y1-i, x1-i)[1] + `2 ${x1-i} ${y1-i}`)
+                        returnFlag = true;
+                    }
+            }
+        } else {
+            if (x2>x1)
+            {
+                for (var i=1; x1+i<x2; i++)
+                    if (this.Occupied(y1+i, x1-i)[0])
+                    {
+                        console.log(this.Occupied(y1+i, x1-i)[1] + `3 ${x1+i} ${y1-i}`)
+                        returnFlag = true;
+                    }
+            }
+            else
+            {
+                for (var i=1; x2+i<x1; i++)
+                    if (this.Occupied(y1-i, x1+i)[0])
+                    {
+                        console.log(this.Occupied(y1-i, x1+i)[1] + `4 ${x1-i} ${y1+i}`)
+                        returnFlag = true;
+                    }
+            }
+        }
+        console.log(returnFlag)
+        return returnFlag;
+    }
     Move(y1=0, x1=0, y2=0, x2=0)
     {
         var xDif = x2-x1;
         var yDif = y2-y1;
         if (y1 == y2 && x1 == x2) return false;
-        //if (this.Occupied(y2, x2)[0]) return false;
         switch (this.board[y1][x1])
         {
             case '♜':
             case '♖':
+                if (!((x1 == x2) || (y1 == y2)))
+                    return false;
+                // Check if theres anything between location and destination
+                if (this.RookJumpCheck(y1, x1, y2, x2))
+                    return false;
                 return this.MakeMove(
                     (
                         // Check to see if move is on an axis
@@ -104,26 +185,45 @@ class Game
                     y1, x1, y2, x2)
             case '♗':
             case '♝':
+                var slope = (x2-x1)/(y2-y1);
+                if (!((slope == 1) || (slope == -1)))
+                    return false;
+                if (this.BishopJumpCheck(y1, x1, y2, x2))
+                    return false;
                 return this.MakeMove(
                     (
                         // Checking to see if move is diagonal via slope
-                        ((x2-x1)/(y2-y1) == 1) ||
-                        ((x2-x1)/(y2-y1) == -1)
+                        (slope == 1) ||
+                        (slope == -1)
                     ),
                     y1, x1, y2, x2)
             case '♕':
             case '♛':
-                return this.MakeMove(
-                    (
+                var slope = (x2-x1)/(y2-y1);
+                if ((x1 == x2) || (y1 == y2))
+                {
+                    if (this.RookJumpCheck(y1, x1, y2, x2))
+                        return false;
+                    return this.MakeMove(
+                        (
+                            // Check to see if move is on an axis
+                            (x1 == x2) || (y1 == y2)
+                        ),
+                        y1, x1, y2, x2)
+                }
+                if (slope == 1 || slope == -1)
+                {
+                    if (this.RookJumpCheck(y1, x1, y2, x2))
+                        return false;
+                    return this.MakeMove(
                         (
                             // Checking to see if move is diagonal via slope
-                            ((xDif)/(yDif) == 1) || 
-                            ((xDif)/(yDif) == -1)
-                        ) || 
-                        // Check to see if move is on an axis
-                        (x1 == x2) || (y1 == y2)
-                    ),
-                    y1, x1, y2, x2)
+                            (slope == 1) ||
+                            (slope == -1)
+                        ),
+                        y1, x1, y2, x2)
+                }
+                return false;
             case '♚':
             case '♔':
                 return this.MakeMove(
@@ -153,8 +253,6 @@ class Game
                     return this.MakeMove(
                         // Regular moves
                         (
-                            // Check if space is occupied
-                            
                             // If on the same X axis
                             xDif == 0 && 
                             (
@@ -182,8 +280,6 @@ class Game
                     return this.MakeMove(
                         // Regular moves
                         (
-                            // Check if space is occupied
-                            
                             // If on the same X axis
                             xDif == 0 && 
                             (

@@ -89,7 +89,6 @@ class Game
             return true;
         } return false;
     }
-<<<<<<< HEAD
     // Check if a rook's destination goes over another piece
     // y1 (int) - Rook's starting y coordinate
     // x1 (int) - Rook's starting x coordinate
@@ -137,35 +136,6 @@ class Game
     // y2 (int) - Bishop's destination y coordinate
     // x2 (int) - Bishop's destination x coordinate
     // return (bool) - True if destination jumps over piece
-=======
-    RookJumpCheck(y1=0, x1=0, y2=0, x2=0)
-    {
-        var xDif = x2-x1;
-        var yDif = y2-y1;
-
-        if (y1 < y2 || x1 < x2)
-        {
-            for (var i = x1; i < x2-1; i++){
-                if (this.Occupied(y1, i)[0])
-                    return true;
-                console.log(this.Occupied(y1, i)[0])}
-            for (var i = y1; i < y2-1; i++){
-                if (this.Occupied(i, x1)[0])
-                    return true;
-                console.log(this.Occupied(i, x1)[0])}
-        } else {
-            for (var i = x2; i < x1-1; i--){
-                if (this.Occupied(y1, i)[0]) 
-                    return true;
-                console.log(this.Occupied(y1, i)[0])}
-            for (var i = y2; i < y1-1; i--){
-                if (this.Occupied(i, x1)[0])
-                    return true;
-                console.log(this.Occupied(i, x1)[0])}
-        }
-        return false;
-    }
->>>>>>> 8630e80d782434d1aa093893d8c3b5ef2353ea65
     BishopJumpCheck(y1=0, x1=0, y2=0, x2=0)
     {
         var slope = (x2-x1)/(y2-y1);
@@ -174,10 +144,7 @@ class Game
         {
             if (x2>x1)
             {
-<<<<<<< HEAD
                 // Checking south-eastern movement
-=======
->>>>>>> 8630e80d782434d1aa093893d8c3b5ef2353ea65
                 for (var i=1; x1+i<x2; i++)
                     if (this.Occupied(y1+i, x1+i)[0])
                     {
@@ -185,10 +152,7 @@ class Game
                         returnFlag = true;
                     }
             }
-<<<<<<< HEAD
             // Checking north-western movement
-=======
->>>>>>> 8630e80d782434d1aa093893d8c3b5ef2353ea65
             else
             {
                 for (var i=1; x2+i<x1; i++)
@@ -199,10 +163,7 @@ class Game
                     }
             }
         } else {
-<<<<<<< HEAD
             // Checking north-eastern movement
-=======
->>>>>>> 8630e80d782434d1aa093893d8c3b5ef2353ea65
             if (x2>x1)
             {
                 for (var i=1; x1+i<x2; i++)
@@ -212,10 +173,7 @@ class Game
                         returnFlag = true;
                     }
             }
-<<<<<<< HEAD
             // Checking south-western movement
-=======
->>>>>>> 8630e80d782434d1aa093893d8c3b5ef2353ea65
             else
             {
                 for (var i=1; x2+i<x1; i++)
@@ -229,15 +187,12 @@ class Game
         console.log(returnFlag)
         return returnFlag;
     }
-<<<<<<< HEAD
     // Check if a piece can go to a destination and move it there
     // y1 (int) - Piece's starting y coordinate
     // x1 (int) - Piece's starting x coordinate
     // y2 (int) - Piece's destination y coordinate
     // x2 (int) - Piece's destination x coordinate
     // return (bool) - True if destination is viable
-=======
->>>>>>> 8630e80d782434d1aa093893d8c3b5ef2353ea65
     Move(y1=0, x1=0, y2=0, x2=0)
     {
         var xDif = x2-x1;
@@ -247,10 +202,7 @@ class Game
         {
             case '♜':
             case '♖':
-<<<<<<< HEAD
                 // A rook's movement is on an axis, so one of the destination positions should be the same as starting
-=======
->>>>>>> 8630e80d782434d1aa093893d8c3b5ef2353ea65
                 if (!((x1 == x2) || (y1 == y2)))
                     return false;
                 // Check if theres anything between location and destination
@@ -264,10 +216,7 @@ class Game
                     y1, x1, y2, x2)
             case '♗':
             case '♝':
-<<<<<<< HEAD
                 // 1 is a perfect diagonal slope, so a Bishop's movement slope should be either 1 or -1
-=======
->>>>>>> 8630e80d782434d1aa093893d8c3b5ef2353ea65
                 var slope = (x2-x1)/(y2-y1);
                 if (!((slope == 1) || (slope == -1)))
                     return false;

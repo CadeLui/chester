@@ -89,33 +89,44 @@ class Game
             return true;
         } return false;
     }
+    // Check if a rook's destination goes over another piece
+    // y1 (int) - Rook's starting y coordinate
+    // x1 (int) - Rook's starting x coordinate
+    // y2 (int) - Rook's destination y coordinate
+    // x2 (int) - Rook's destination x coordinate
+    // return (bool) - True if destination jumps over piece
     RookJumpCheck(y1=0, x1=0, y2=0, x2=0)
     {
-        var xDif = x2-x1;
-        var yDif = y2-y1;
-
+        // If movement is in the positive direction
         if (y1 < y2 || x1 < x2)
         {
+            // Check possible moves towards east
             for (var i = x1; i < x2-1; i++){
                 if (this.Occupied(y1, i)[0])
                     return true;
-                console.log(this.Occupied(y1, i)[0])}
+                }
+            // Check possible moves towards south
             for (var i = y1; i < y2-1; i++){
                 if (this.Occupied(i, x1)[0])
-                    return true;
-                console.log(this.Occupied(i, x1)[0])}
+                    return true; }
         } else {
+            // Check possible moves towards west
             for (var i = x2; i < x1-1; i--){
                 if (this.Occupied(y1, i)[0]) 
-                    return true;
-                console.log(this.Occupied(y1, i)[0])}
+                    return true; }
+            // Check possible moves towards north
             for (var i = y2; i < y1-1; i--){
                 if (this.Occupied(i, x1)[0])
-                    return true;
-                console.log(this.Occupied(i, x1)[0])}
+                    return true; }
         }
         return false;
     }
+    // Check if a Bishop's destination goes over another piece
+    // y1 (int) - Bishop's starting y coordinate
+    // x1 (int) - Bishop's starting x coordinate
+    // y2 (int) - Bishop's destination y coordinate
+    // x2 (int) - Bishop's destination x coordinate
+    // return (bool) - True if destination jumps over piece
     BishopJumpCheck(y1=0, x1=0, y2=0, x2=0)
     {
         var slope = (x2-x1)/(y2-y1);
@@ -124,6 +135,7 @@ class Game
         {
             if (x2>x1)
             {
+                // Checking south-eastern movement
                 for (var i=1; x1+i<x2; i++)
                     if (this.Occupied(y1+i, x1+i)[0])
                     {
@@ -131,6 +143,7 @@ class Game
                         returnFlag = true;
                     }
             }
+            // Checking north-western movement
             else
             {
                 for (var i=1; x2+i<x1; i++)
@@ -141,6 +154,7 @@ class Game
                     }
             }
         } else {
+            // Checking north-eastern movement
             if (x2>x1)
             {
                 for (var i=1; x1+i<x2; i++)
@@ -150,6 +164,7 @@ class Game
                         returnFlag = true;
                     }
             }
+            // Checking south-western movement
             else
             {
                 for (var i=1; x2+i<x1; i++)
@@ -163,6 +178,12 @@ class Game
         console.log(returnFlag)
         return returnFlag;
     }
+    // Check if a piece can go to a destination and move it there
+    // y1 (int) - Piece's starting y coordinate
+    // x1 (int) - Piece's starting x coordinate
+    // y2 (int) - Piece's destination y coordinate
+    // x2 (int) - Piece's destination x coordinate
+    // return (bool) - True if destination is viable
     Move(y1=0, x1=0, y2=0, x2=0)
     {
         var xDif = x2-x1;
@@ -172,6 +193,7 @@ class Game
         {
             case '♜':
             case '♖':
+                // A rook's movement is on an axis, so one of the destination positions should be the same as starting
                 if (!((x1 == x2) || (y1 == y2)))
                     return false;
                 // Check if theres anything between location and destination
@@ -185,6 +207,7 @@ class Game
                     y1, x1, y2, x2)
             case '♗':
             case '♝':
+                // 1 is a perfect diagonal slope, so a Bishop's movement slope should be either 1 or -1
                 var slope = (x2-x1)/(y2-y1);
                 if (!((slope == 1) || (slope == -1)))
                     return false;
@@ -299,6 +322,10 @@ class Game
     }
 }
 
+// Takes a string, strips the command from it, and returns an array of parameters seperated by spaces
+// string (string) - The user's full input
+// command (string) - The command the user input
+// return (array(string)) - An array of all the separate parameters.
 function grabParameters(string = "", command = "")
 {
     var parameters = []

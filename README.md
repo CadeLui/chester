@@ -12,3 +12,11 @@ NO GUARANTEES ANYTHING HERE WILL ACTUALLY BE IMPLEMENTED.
   - Move a piece at (position) to (destination)
 - .forfeit
   - If you suck, you can forfeit a match
+
+## To-do list
+- Only allow capturing opposing colors
+- Lock the match to two players
+- Require turn-swapping
+
+## Known bugs
+- None

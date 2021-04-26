@@ -340,6 +340,7 @@ function grabParameters(string = "", command = "")
     var parameters = []
     var parameter = ""
     string = string.substring(command.length+1)
+    // Iterate through string, look for spaces, add characters to string until another space.
     for (var i=0; i<string.length; i++)
     {
         if (string[i] == " ")
@@ -356,10 +357,12 @@ function grabParameters(string = "", command = "")
 
 const board = new Game();
 
+// Event called when the bot turns on
 client.on("ready", () => {
     console.log("E7 -> E5");
 });
 
+// Event called when a user sends a message in a server the bot is in
 client.on("message", msg => {
     if (!msg.content.startsWith("."))
         return;

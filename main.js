@@ -13,7 +13,21 @@ dotenv.config();
 const BLACK_PIECES = ['♞', '♝', '♛', '♚', '♟', '♜']
 const WHITE_PIECES = ['♘', '♗', '♕', '♔', '♙', '♖']
 
-class Game
+
+// Checks lists to see if they contain a given item
+// list (list) - contains a list to be checked
+// item (any) - Item being checked for in the list
+// return (bool) - Returns true if there was an item, false if no item
+function contains(list, item)
+{
+  for (var i=0; i<list.length; i++)
+  {
+    if (list[i] == item) return true;
+  }
+  return false;
+}
+
+class Board
 {
     // Takes the board array and turns it into a string to reply to a message with
     // return (string) - A string representing the current board
@@ -348,6 +362,30 @@ class Game
     }
 }
 
+class Game
+{
+    // Players will be identifies by their discord ID's
+    // when turn is false, that is white's turn. When turn is true, it is black's turn
+    turn = false;
+    black = ``;
+    white = ``;
+    board = new Board();
+
+    // Register's a players turn and checks if it is valid.
+    playTurn(player=``, y1=0, x1=0, y2=0, x2=0)
+    {
+        if ((player == this.white && this.turn) ||
+            (player == this.black && !this.turn) ||
+            (player == this.white && contains(BLACK_PIECES, this.board.Occupied(y1, x1)[1])) ||
+            (player == this.black && contains(WHITE_PIECES, this.board.Occupied(y1, x1)[1])) ||
+            (player == this.white && contains(WHITE_PIECES, this.board.Occupied(y2, x2)[1])) ||
+            (player == this.black && contains(BLACK_PIECES, this.board.Occupied(y2, x2)[1])))
+            return false;
+        else
+            this.board.Move(y1, x1, y2, x2)
+    }
+}
+
 // Takes a string, strips the command from it, and returns an array of parameters seperated by spaces
 // string (string) - The user's full input
 // command (string) - The command the user input
@@ -372,9 +410,9 @@ function grabParameters(string = "", command = "")
     return parameters
 }
 
-const board = new Game();
+const board = new Board();
 
-// Event called when the bot turns on
+// Event called when the bot establishes connection with Discord's API servers
 client.on("ready", () => {
     console.log("E7 -> E5");
 });

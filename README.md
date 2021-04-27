@@ -2,6 +2,7 @@
 A bot that allows two player to play chess against each other.
 Works a lot better with larger font sizes.
 NO GUARANTEES ANYTHING HERE WILL ACTUALLY BE IMPLEMENTED.
+This is for my Create PT.
 
 ## Commands
 - .showBoard

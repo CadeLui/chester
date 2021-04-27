@@ -46,6 +46,7 @@ class Game
         this.boardString += "```"
         return this.boardString
     }
+    // Constructor method
     constructor()
     {
         this.board = [
@@ -70,18 +71,34 @@ class Game
         ]
         this.genBoardString()
     }
+    // Move a piece to a destination and set its origin to a blank space
+    // y1 (int) - Piece's starting y coordinate
+    // x1 (int) - Piece's starting x coordinate
+    // y2 (int) - Piece's destination y coordinate
+    // x2 (int) - Piece's destination x coordinate
     ReplacePiece(y1=0, x1=0, y2=0, x2=0)
     {
         this.board[y2][x2] = this.board[y1][x1]
         this.board[y1][x1] = this.blankBoard[y1][x1]
         this.genBoardString()
     }
+    // Check if a space is occupied
+    // y (int) - A y coordinate on the board
+    // x (int) - An x coordinate on the board
+    // return ([bool, string]) - Whether the space is occupied and what occupies it
     Occupied(y=0, x=0)
     {
         if (this.board[y][x] == '◼️' || this.board[y][x] == '◻️')
             return [false, this.board[y][x]];
         return [true, this.board[y][x]];
     }
+    // Check if a piece can move from one position to another and move it
+    // condition (bool) - Whether or not a piece can move
+    // y1 (int) - Piece's starting y coordinate
+    // x1 (int) - Piece's starting x coordinate
+    // y2 (int) - Piece's destination y coordinate
+    // x2 (int) - Piece's destination x coordinate
+    // return (bool) - True if piece can move to destination
     MakeMove(condition=true, y1=0, x1=0, y2=0, x2=0)
     {
         if (condition) {

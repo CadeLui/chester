@@ -13,6 +13,8 @@ dotenv.config();
 const BLACK_PIECES = ['♞', '♝', '♛', '♚', '♟', '♜']
 const WHITE_PIECES = ['♘', '♗', '♕', '♔', '♙', '♖']
 
+var gameDict = {};
+
 
 // Checks lists to see if they contain a given item
 // list (list) - contains a list to be checked
@@ -366,11 +368,13 @@ class Game
 {
     // Players will be identifies by their discord ID's
     // when turn is false, that is white's turn. When turn is true, it is black's turn
-    turn = false;
-    black = ``;
-    white = ``;
-    board = new Board();
-
+    constructor(white = ``, black = ``)
+    {
+        this.turn = false;
+        this.black = black;
+        this.white = white;
+        this.board = new Board();
+    }
     // Register's a players turn and checks if it is valid.
     playTurn(player=``, y1=0, x1=0, y2=0, x2=0)
     {
@@ -423,6 +427,11 @@ client.on("message", msg => {
         return;
     console.log(msg.content)
     
+    if (msg.content.startsWith(".challenge"))
+        {
+            gameDict[msg.channel.id] = new Game(msg.author.id, msg.mentions.users.first().id)
+            console.log(gameDict[msg.channel.id])
+        }
     if (msg.content.startsWith(".showBoard"))
         msg.channel.send(board.boardString)
     if (msg.content.startsWith(".move"))

@@ -368,7 +368,7 @@ class Game
 {
     // Players will be identifies by their discord ID's
     // when turn is false, that is white's turn. When turn is true, it is black's turn
-    constructor(white = ``, black = ``)
+    constructor(white, black)
     {
         this.turn = false;
         this.black = black;
@@ -376,17 +376,26 @@ class Game
         this.board = new Board();
     }
     // Register's a players turn and checks if it is valid.
-    playTurn(player=``, y1=0, x1=0, y2=0, x2=0)
+    playTurn(player, y1=0, x1=0, y2=0, x2=0)
     {
-        if ((player == this.white && this.turn) ||
-            (player == this.black && !this.turn) ||
-            (player == this.white && contains(BLACK_PIECES, this.board.Occupied(y1, x1)[1])) ||
-            (player == this.black && contains(WHITE_PIECES, this.board.Occupied(y1, x1)[1])) ||
-            (player == this.white && contains(WHITE_PIECES, this.board.Occupied(y2, x2)[1])) ||
-            (player == this.black && contains(BLACK_PIECES, this.board.Occupied(y2, x2)[1])))
+        if (player == this.white && this.turn)
             return false;
-        else
-            this.board.Move(y1, x1, y2, x2)
+        if (player == this.black && !this.turn)
+            return false;
+        if (player == this.white && contains(BLACK_PIECES, this.board.Occupied(y1, x1)[1]))
+            return false;
+        if (player == this.black && contains(WHITE_PIECES, this.board.Occupied(y1, x1)[1]))
+            return false;
+        if (player == this.white && contains(WHITE_PIECES, this.board.Occupied(y2, x2)[1]))
+            return false;
+        if (player == this.black && contains(BLACK_PIECES, this.board.Occupied(y2, x2)[1]))
+            return false;
+        if (this.board.Move(y1, x1, y2, x2))
+        {
+            this.turn = !this.turn
+            return true;
+        }
+        return false;
     }
 }
 
@@ -428,17 +437,25 @@ client.on("message", msg => {
     console.log(msg.content)
     
     if (msg.content.startsWith(".challenge"))
-        {
-            gameDict[msg.channel.id] = new Game(msg.author.id, msg.mentions.users.first().id)
-            console.log(gameDict[msg.channel.id])
-        }
+    {
+        gameDict[msg.channel.id] = new Game(msg.author.id, msg.mentions.users.first().id)
+        console.log(gameDict[msg.channel.id])
+        msg.reply("Challenge made.")
+    }
+    if (gameDict[msg.channel.id] == undefined)
+    {
+        msg.reply("There is no game in this channel.")
+        return;
+    }
     if (msg.content.startsWith(".showBoard"))
-        msg.channel.send(board.boardString)
+    {
+        msg.channel.send(gameDict[msg.channel.id].board.boardString)
+    }
     if (msg.content.startsWith(".move"))
     {
         var parameters = grabParameters(msg.content, ".move")
-        if (board.Move(parseInt(parameters[1]), parseInt(parameters[0]), parseInt(parameters[3]), parseInt(parameters[2])))
-            msg.channel.send(board.boardString)
+        if (gameDict[msg.channel.id].playTurn(msg.author.id, parseInt(parameters[1]), parseInt(parameters[0]), parseInt(parameters[3]), parseInt(parameters[2])))
+            msg.channel.send(gameDict[msg.channel.id].board.boardString)
         else msg.channel.send("Failed move.")
     }
 });

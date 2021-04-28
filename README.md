@@ -15,7 +15,7 @@ This is for my Create PT.
   - If you suck, you can forfeit a match
 
 ## To-do list
-- Fix bishop movement bug
+- Nothing?
 
 ## Known bugs
-Bishops occasionally cause the bot to crash
+none

@@ -197,7 +197,7 @@ class Board
             }
         } else {
             // Checking north-eastern movement
-            if (x2>x1)
+            if (x2<x1)
             {
                 for (var i=1; x1+i<x2; i++)
                     if (this.Occupied(y1+i, x1-i)[0])
@@ -376,20 +376,36 @@ class Game
         this.board = new Board();
     }
     // Register's a players turn and checks if it is valid.
-    playTurn(player, y1=0, x1=0, y2=0, x2=0)
+    PlayTurn(player, y1=0, x1=0, y2=0, x2=0)
     {
-        if (player == this.white && this.turn)
-            return false;
-        if (player == this.black && !this.turn)
-            return false;
-        if (player == this.white && contains(BLACK_PIECES, this.board.Occupied(y1, x1)[1]))
-            return false;
-        if (player == this.black && contains(WHITE_PIECES, this.board.Occupied(y1, x1)[1]))
-            return false;
-        if (player == this.white && contains(WHITE_PIECES, this.board.Occupied(y2, x2)[1]))
-            return false;
-        if (player == this.black && contains(BLACK_PIECES, this.board.Occupied(y2, x2)[1]))
-            return false;
+        console.log(this.board.Occupied(y1, x1)[1])
+        console.log(this.board.Occupied(y2, x2)[1])
+        if (this.white != this.black)
+        {
+            if (player == this.white && this.turn)
+                return false;
+            if (player == this.black && !this.turn)
+                return false;
+            if (player == this.white && contains(BLACK_PIECES, this.board.Occupied(y1, x1)[1]))
+                return false;
+            if (player == this.black && contains(WHITE_PIECES, this.board.Occupied(y1, x1)[1]))
+                return false;
+            if (player == this.white && contains(WHITE_PIECES, this.board.Occupied(y2, x2)[1]))
+                return false;
+            if (player == this.black && contains(BLACK_PIECES, this.board.Occupied(y2, x2)[1]))
+                return false;
+        }
+        else
+        {
+            if (!this.turn && contains(BLACK_PIECES, this.board.Occupied(y1, x1)[1]))
+                return false;
+            if (this.turn && contains(WHITE_PIECES, this.board.Occupied(y1, x1)[1]))
+                return false;
+            if (!this.turn && contains(WHITE_PIECES, this.board.Occupied(y2, x2)[1]))
+                return false;
+            if (this.turn && contains(BLACK_PIECES, this.board.Occupied(y2, x2)[1]))
+                return false;
+        }
         if (this.board.Move(y1, x1, y2, x2))
         {
             this.turn = !this.turn
@@ -423,8 +439,6 @@ function grabParameters(string = "", command = "")
     return parameters
 }
 
-const board = new Board();
-
 // Event called when the bot establishes connection with Discord's API servers
 client.on("ready", () => {
     console.log("E7 -> E5");
@@ -436,9 +450,10 @@ client.on("message", msg => {
         return;
     console.log(msg.content)
     
+    //if (msg.content.startsWith(".endGame"))
     if (msg.content.startsWith(".challenge"))
     {
-        gameDict[msg.channel.id] = new Game(msg.author.id, msg.mentions.users.first().id)
+        gameDict[msg.channel.id] = new Game(msg.mentions.users.first().id, msg.author.id)
         console.log(gameDict[msg.channel.id])
         msg.reply("Challenge made.")
     }
@@ -449,15 +464,14 @@ client.on("message", msg => {
     }
     if (msg.content.startsWith(".showBoard"))
     {
-        msg.channel.send(gameDict[msg.channel.id].board.boardString)
     }
     if (msg.content.startsWith(".move"))
     {
         var parameters = grabParameters(msg.content, ".move")
-        if (gameDict[msg.channel.id].playTurn(msg.author.id, parseInt(parameters[1]), parseInt(parameters[0]), parseInt(parameters[3]), parseInt(parameters[2])))
-            msg.channel.send(gameDict[msg.channel.id].board.boardString)
+        if (gameDict[msg.channel.id].PlayTurn(msg.author.id, parseInt(parameters[1]), parseInt(parameters[0]), parseInt(parameters[3]), parseInt(parameters[2]))) {}
         else msg.channel.send("Failed move.")
     }
+    msg.channel.send(gameDict[msg.channel.id].board.boardString)
 });
 
 client.login(process.env.TOKEN);

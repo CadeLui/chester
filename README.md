@@ -15,9 +15,8 @@ This is for my Create PT.
   - If you suck, you can forfeit a match
 
 ## To-do list
-- Only allow capturing opposing colors
-- Lock the match to two players
-- Require turn-swapping
+- Implement automatic check-mate
+- Forfeit command
 
 ## Known bugs
 - None

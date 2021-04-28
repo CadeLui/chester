@@ -177,6 +177,7 @@ class Board
         {
             if (x2>x1)
             {
+                console.log("1");
                 // Checking south-eastern movement
                 for (var i=1; x1+i<x2; i++)
                     if (this.Occupied(y1+i, x1+i)[0])
@@ -188,6 +189,7 @@ class Board
             // Checking north-western movement
             else
             {
+                console.log("2");
                 for (var i=1; x2+i<x1; i++)
                     if (this.Occupied(y1-i, x1-i)[0])
                     {
@@ -196,20 +198,24 @@ class Board
                     }
             }
         } else {
-            // Checking north-eastern movement
-            if (x2>x1)
+            // Checking south-western movement
+            if (x2<x1)
             {
+                console.log("3");
                 for (var i=1; x1+i<x2; i++)
+                    console.log(`3 ${x1+i} ${y1-i}`)
                     if (this.Occupied(y1+i, x1-i)[0])
                     {
                         console.log(this.Occupied(y1+i, x1-i)[1] + `3 ${x1+i} ${y1-i}`)
                         returnFlag = true;
                     }
             }
-            // Checking south-western movement
+            // Checking north-eastern movement
             else
             {
+                console.log("4");
                 for (var i=1; x2+i<x1; i++)
+                    console.log(`4 ${x1-i} ${y1+i}`)
                     if (this.Occupied(y1-i, x1+i)[0])
                     {
                         console.log(this.Occupied(y1-i, x1+i)[1] + `4 ${x1-i} ${y1+i}`)
@@ -278,7 +284,7 @@ class Board
                 }
                 if (slope == 1 || slope == -1)
                 {
-                    if (this.RookJumpCheck(y1, x1, y2, x2))
+                    if (this.BishopJumpCheck(y1, x1, y2, x2))
                         return false;
                     return this.MakeMove(
                         (
@@ -423,7 +429,7 @@ function grabParameters(string = "", command = "")
     return parameters
 }
 
-const board = new Board();
+const testBoard = new Board();
 
 // Event called when the bot establishes connection with Discord's API servers
 client.on("ready", () => {
@@ -435,27 +441,16 @@ client.on("message", msg => {
     if (!msg.content.startsWith("."))
         return;
     console.log(msg.content)
-    
-    if (msg.content.startsWith(".challenge"))
-    {
-        gameDict[msg.channel.id] = new Game(msg.author.id, msg.mentions.users.first().id)
-        console.log(gameDict[msg.channel.id])
-        msg.reply("Challenge made.")
-    }
-    if (gameDict[msg.channel.id] == undefined)
-    {
-        msg.reply("There is no game in this channel.")
-        return;
-    }
+
     if (msg.content.startsWith(".showBoard"))
     {
-        msg.channel.send(gameDict[msg.channel.id].board.boardString)
+        msg.channel.send(testBoard.boardString)
     }
     if (msg.content.startsWith(".move"))
     {
         var parameters = grabParameters(msg.content, ".move")
-        if (gameDict[msg.channel.id].playTurn(msg.author.id, parseInt(parameters[1]), parseInt(parameters[0]), parseInt(parameters[3]), parseInt(parameters[2])))
-            msg.channel.send(gameDict[msg.channel.id].board.boardString)
+        if (testBoard.Move(parseInt(parameters[1]), parseInt(parameters[0]), parseInt(parameters[3]), parseInt(parameters[2])))
+            msg.channel.send(testBoard.boardString)
         else msg.channel.send("Failed move.")
     }
 });
